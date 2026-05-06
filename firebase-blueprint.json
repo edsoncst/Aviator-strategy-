@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User subscription and profile data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "plan": { "type": "string", "enum": ["free", "monthly", "annual"] },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "lastSignalAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "plan", "createdAt"]
+    },
+    "Signal": {
+      "title": "Aviator Signal",
+      "description": "Historical crash point data",
+      "type": "object",
+      "properties": {
+        "multiplier": { "type": "number" },
+        "type": { "type": "string", "enum": ["low", "purple", "pink"] },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["multiplier", "type", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User documents"
+    },
+    "/signals/{signalId}": {
+      "schema": "Signal",
+      "description": "Signal history documents"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'plan', 'createdAt']) &&
+             data.uid is string &&
+             data.email is string &&
+             data.plan in ['free', 'monthly', 'annual'] &&
+             data.createdAt is string;
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['plan', 'expiresAt', 'lastSignalAt']) ||
+        incoming().diff(existing()).affectedKeys().hasOnly(['lastSignalAt'])
+      );
+    }
+
+    match /signals/{signalId} {
+      allow read: if isSignedIn();
+      allow write: if false; 
+    }
+  }
+}
