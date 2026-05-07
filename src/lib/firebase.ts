@@ -19,6 +19,7 @@ const app = initializeApp(firebaseConfig);
 export const db = initializeFirestore(app, {
   cacheSizeBytes: CACHE_SIZE_UNLIMITED,
   experimentalForceLongPolling: true,
+  
 });
 
 export const auth = getAuth(app);
