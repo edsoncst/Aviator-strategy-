@@ -5,8 +5,8 @@ import {
   CACHE_SIZE_UNLIMITED 
 } from "firebase/firestore";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBWYbp801YgFWLIVZN-sqcp83esf7LVAeI",
+const firebaseConfig = { 
+apiKey: "AIzaSyBWYbp801YgFWLIVZN-sqcp83esf7LVAeI",
   authDomain: "aviator-strategy-xi.firebaseapp.com",
   projectId: "aviator-strategy-xi",
   storageBucket: "aviator-strategy-xi.appspot.com",
